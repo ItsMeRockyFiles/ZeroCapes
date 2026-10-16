@@ -1,0 +1,17 @@
+{
+  "zerocapes.title": "ZeroCapes",
+  "zerocapes.button.title": "ZeroCapes...",
+  "zerocapes.screen.title": "ZeroCapes - Official Capes",
+  "zerocapes.screen.search": "Search capes...",
+  "zerocapes.screen.equip": "Equip Cape",
+  "zerocapes.screen.equipped": "EQUIPPED",
+  "zerocapes.screen.status.equipped": "Currently Equipped",
+  "zerocapes.screen.status.unequipped": "Not Equipped",
+  "zerocapes.screen.category.all": "All",
+  "zerocapes.screen.none": "Reset to None",
+  "zerocapes.screen.upload": "Upload PNG...",
+  "zerocapes.screen.custom.no_file": "No custom cape uploaded yet.",
+  "zerocapes.screen.custom.hint": "Click \"Upload PNG\" to pick a file.",
+  "key.zerocapes.open": "Open ZeroCapes Menu",
+  "category.zerocapes": "ZeroCapes"
+}

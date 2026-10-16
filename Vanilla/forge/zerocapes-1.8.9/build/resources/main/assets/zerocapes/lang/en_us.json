@@ -1,0 +1,14 @@
+{
+  "zerocapes.title": "ZeroCapes",
+  "zerocapes.button.title": "ZeroCapes...",
+  "zerocapes.screen.title": "ZeroCapes - Official Capes",
+  "zerocapes.screen.search": "Search capes...",
+  "zerocapes.screen.equip": "Equip Cape",
+  "zerocapes.screen.equipped": "EQUIPPED",
+  "zerocapes.screen.status.equipped": "Currently Equipped",
+  "zerocapes.screen.status.unequipped": "Not Equipped",
+  "zerocapes.screen.category.all": "All",
+  "zerocapes.screen.none": "Reset to None",
+  "key.zerocapes.open": "Open ZeroCapes Menu",
+  "category.zerocapes": "ZeroCapes"
+}

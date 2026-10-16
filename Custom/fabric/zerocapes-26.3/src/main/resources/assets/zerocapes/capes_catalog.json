@@ -1,0 +1,394 @@
+[
+  {
+    "id": "none",
+    "name": "None (Vanilla / Default)",
+    "category": "Default",
+    "description": "Shows your default Minecraft cape if you have one equipped on your account.",
+    "texture": null
+  },
+  {
+    "id": "pan_cape",
+    "name": "Pan Cape",
+    "category": "Ownership",
+    "description": "Official Ownership cape: Pan Cape",
+    "texture": "zerocapes:textures/capes/pan_cape.png"
+  },
+  {
+    "id": "migrator_cape",
+    "name": "Migrator Cape",
+    "category": "Ownership",
+    "description": "Official Ownership cape: Migrator Cape",
+    "texture": "zerocapes:textures/capes/migrator_cape.png"
+  },
+  {
+    "id": "vanilla_cape",
+    "name": "Vanilla Cape",
+    "category": "Ownership",
+    "description": "Official Ownership cape: Vanilla Cape",
+    "texture": "zerocapes:textures/capes/vanilla_cape.png"
+  },
+  {
+    "id": "common_cape",
+    "name": "Common Cape",
+    "category": "Ownership",
+    "description": "Official Ownership cape: Common Cape",
+    "texture": "zerocapes:textures/capes/common_cape.png"
+  },
+  {
+    "id": "hero_cape",
+    "name": "Hero Cape",
+    "category": "Ownership",
+    "description": "Official Ownership cape: Hero Cape",
+    "texture": "zerocapes:textures/capes/hero_cape.png"
+  },
+  {
+    "id": "twisted_cape",
+    "name": "Twisted Cape",
+    "category": "Ownership",
+    "description": "Official Ownership cape: Twisted Cape",
+    "texture": "zerocapes:textures/capes/twisted_cape.png"
+  },
+  {
+    "id": "classic_mojang_cape",
+    "name": "Classic Mojang Cape",
+    "category": "Staff",
+    "description": "Official Staff cape: Classic Mojang Cape",
+    "texture": "zerocapes:textures/capes/classic_mojang_cape.png"
+  },
+  {
+    "id": "microsoft_xbox_cape",
+    "name": "Microsoft Xbox Cape",
+    "category": "Staff",
+    "description": "Official Staff cape: Microsoft Xbox Cape",
+    "texture": "zerocapes:textures/capes/microsoft_xbox_cape.png"
+  },
+  {
+    "id": "4j_studios_cape",
+    "name": "4J Studios Cape",
+    "category": "Staff",
+    "description": "Official Staff cape: 4J Studios Cape",
+    "texture": "zerocapes:textures/capes/4j_studios_cape.png"
+  },
+  {
+    "id": "mojang_cape",
+    "name": "Mojang Cape",
+    "category": "Staff",
+    "description": "Official Staff cape: Mojang Cape",
+    "texture": "zerocapes:textures/capes/mojang_cape.png"
+  },
+  {
+    "id": "mojang_studios_cape",
+    "name": "Mojang Studios Cape",
+    "category": "Staff",
+    "description": "Official Staff cape: Mojang Studios Cape",
+    "texture": "zerocapes:textures/capes/mojang_studios_cape.png"
+  },
+  {
+    "id": "minecon_2011_cape",
+    "name": "MINECON 2011 Cape",
+    "category": "Physical Event",
+    "description": "Official Physical Event cape: MINECON 2011 Cape",
+    "texture": "zerocapes:textures/capes/minecon_2011_cape.png"
+  },
+  {
+    "id": "minecon_2012_cape",
+    "name": "MINECON 2012 Cape",
+    "category": "Physical Event",
+    "description": "Official Physical Event cape: MINECON 2012 Cape",
+    "texture": "zerocapes:textures/capes/minecon_2012_cape.png"
+  },
+  {
+    "id": "minecon_2013_cape",
+    "name": "MINECON 2013 Cape",
+    "category": "Physical Event",
+    "description": "Official Physical Event cape: MINECON 2013 Cape",
+    "texture": "zerocapes:textures/capes/minecon_2013_cape.png"
+  },
+  {
+    "id": "minecon_2015_cape",
+    "name": "MINECON 2015 Cape",
+    "category": "Physical Event",
+    "description": "Official Physical Event cape: MINECON 2015 Cape",
+    "texture": "zerocapes:textures/capes/minecon_2015_cape.png"
+  },
+  {
+    "id": "minecon_2016_cape",
+    "name": "MINECON 2016 Cape",
+    "category": "Physical Event",
+    "description": "Official Physical Event cape: MINECON 2016 Cape",
+    "texture": "zerocapes:textures/capes/minecon_2016_cape.png"
+  },
+  {
+    "id": "minecraft_experience_cape",
+    "name": "Minecraft Experience Cape",
+    "category": "Physical Event",
+    "description": "Official Physical Event cape: Minecraft Experience Cape",
+    "texture": "zerocapes:textures/capes/minecraft_experience_cape.png"
+  },
+  {
+    "id": "moonlight_trail_cape",
+    "name": "Moonlight Trail Cape",
+    "category": "Physical Event",
+    "description": "Official Physical Event cape: Moonlight Trail Cape",
+    "texture": "zerocapes:textures/capes/moonlight_trail_cape.png"
+  },
+  {
+    "id": "crafter_cape",
+    "name": "Crafter Cape",
+    "category": "Physical Event",
+    "description": "Official Physical Event cape: Crafter Cape",
+    "texture": "zerocapes:textures/capes/crafter_cape.png"
+  },
+  {
+    "id": "founders_cape",
+    "name": "Founder's Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Founder's Cape",
+    "texture": "zerocapes:textures/capes/founders_cape.png"
+  },
+  {
+    "id": "progress_pride_cape",
+    "name": "Progress Pride Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Progress Pride Cape",
+    "texture": "zerocapes:textures/capes/progress_pride_cape.png"
+  },
+  {
+    "id": "cherry_blossom_cape",
+    "name": "Cherry Blossom Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Cherry Blossom Cape",
+    "texture": "zerocapes:textures/capes/cherry_blossom_cape.png"
+  },
+  {
+    "id": "followers_cape",
+    "name": "Follower's Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Follower's Cape",
+    "texture": "zerocapes:textures/capes/followers_cape.png"
+  },
+  {
+    "id": "purple_heart_cape",
+    "name": "Purple Heart Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Purple Heart Cape",
+    "texture": "zerocapes:textures/capes/purple_heart_cape.png"
+  },
+  {
+    "id": "15th_anniversary_cape",
+    "name": "15th Anniversary Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: 15th Anniversary Cape",
+    "texture": "zerocapes:textures/capes/15th_anniversary_cape.png"
+  },
+  {
+    "id": "mcc_15th_year_cape",
+    "name": "MCC 15th Year Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: MCC 15th Year Cape",
+    "texture": "zerocapes:textures/capes/mcc_15th_year_cape.png"
+  },
+  {
+    "id": "mojang_office_cape",
+    "name": "Mojang Office Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Mojang Office Cape",
+    "texture": "zerocapes:textures/capes/mojang_office_cape.png"
+  },
+  {
+    "id": "home_cape",
+    "name": "Home Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Home Cape",
+    "texture": "zerocapes:textures/capes/home_cape.png"
+  },
+  {
+    "id": "menace_cape",
+    "name": "Menace Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Menace Cape",
+    "texture": "zerocapes:textures/capes/menace_cape.png"
+  },
+  {
+    "id": "yearn_cape",
+    "name": "Yearn Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Yearn Cape",
+    "texture": "zerocapes:textures/capes/yearn_cape.png"
+  },
+  {
+    "id": "copper_cape",
+    "name": "Copper Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Copper Cape",
+    "texture": "zerocapes:textures/capes/copper_cape.png"
+  },
+  {
+    "id": "zombie_horse_cape",
+    "name": "Zombie Horse Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Zombie Horse Cape",
+    "texture": "zerocapes:textures/capes/zombie_horse_cape.png"
+  },
+  {
+    "id": "builder_cape",
+    "name": "Builder Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Builder Cape",
+    "texture": "zerocapes:textures/capes/builder_cape.png"
+  },
+  {
+    "id": "aurora_cape",
+    "name": "Aurora Cape",
+    "category": "Virtual Event",
+    "description": "Official Virtual Event cape: Aurora Cape",
+    "texture": "zerocapes:textures/capes/aurora_cape.png"
+  },
+  {
+    "id": "bacon_cape",
+    "name": "Bacon Cape",
+    "category": "Personal",
+    "description": "Official Personal cape: Bacon Cape",
+    "texture": "zerocapes:textures/capes/bacon_cape.png"
+  },
+  {
+    "id": "millionth_customer_cape",
+    "name": "Millionth Customer Cape",
+    "category": "Personal",
+    "description": "Official Personal cape: Millionth Customer Cape",
+    "texture": "zerocapes:textures/capes/millionth_customer_cape.png"
+  },
+  {
+    "id": "db_cape",
+    "name": "dB Cape",
+    "category": "Personal",
+    "description": "Official Personal cape: dB Cape",
+    "texture": "zerocapes:textures/capes/db_cape.png"
+  },
+  {
+    "id": "snowman_cape",
+    "name": "Snowman Cape",
+    "category": "Personal",
+    "description": "Official Personal cape: Snowman Cape",
+    "texture": "zerocapes:textures/capes/snowman_cape.png"
+  },
+  {
+    "id": "cheapsh0ts_cape",
+    "name": "Cheapsh0t's Cape",
+    "category": "Personal",
+    "description": "Official Personal cape: Cheapsh0t's Cape",
+    "texture": "zerocapes:textures/capes/cheapsh0ts_cape.png"
+  },
+  {
+    "id": "spade_cape",
+    "name": "Spade Cape",
+    "category": "Personal",
+    "description": "Official Personal cape: Spade Cape",
+    "texture": "zerocapes:textures/capes/spade_cape.png"
+  },
+  {
+    "id": "prismarine_cape",
+    "name": "Prismarine Cape",
+    "category": "Personal",
+    "description": "Official Personal cape: Prismarine Cape",
+    "texture": "zerocapes:textures/capes/prismarine_cape.png"
+  },
+  {
+    "id": "turtle_cape",
+    "name": "Turtle Cape",
+    "category": "Personal",
+    "description": "Official Personal cape: Turtle Cape",
+    "texture": "zerocapes:textures/capes/turtle_cape.png"
+  },
+  {
+    "id": "birthday_cape",
+    "name": "Birthday Cape",
+    "category": "Personal",
+    "description": "Official Personal cape: Birthday Cape",
+    "texture": "zerocapes:textures/capes/birthday_cape.png"
+  },
+  {
+    "id": "valentine_cape",
+    "name": "Valentine Cape",
+    "category": "Personal",
+    "description": "Official Personal cape: Valentine Cape",
+    "texture": "zerocapes:textures/capes/valentine_cape.png"
+  },
+  {
+    "id": "oxeye_cape",
+    "name": "Oxeye Cape",
+    "category": "Personal",
+    "description": "Official Personal cape: Oxeye Cape",
+    "texture": "zerocapes:textures/capes/oxeye_cape.png"
+  },
+  {
+    "id": "blueprint_cape",
+    "name": "Blueprint Cape",
+    "category": "Personal",
+    "description": "Official Personal cape: Blueprint Cape",
+    "texture": "zerocapes:textures/capes/blueprint_cape.png"
+  },
+  {
+    "id": "scrolls_champion_cape",
+    "name": "Scrolls Champion Cape",
+    "category": "Competition",
+    "description": "Official Competition cape: Scrolls Champion Cape",
+    "texture": "zerocapes:textures/capes/scrolls_champion_cape.png"
+  },
+  {
+    "id": "cobalt_cape",
+    "name": "Cobalt Cape",
+    "category": "Competition",
+    "description": "Official Competition cape: Cobalt Cape",
+    "texture": "zerocapes:textures/capes/cobalt_cape.png"
+  },
+  {
+    "id": "translator_cape",
+    "name": "Translator Cape",
+    "category": "Volunteer",
+    "description": "Official Volunteer cape: Translator Cape",
+    "texture": "zerocapes:textures/capes/translator_cape.png"
+  },
+  {
+    "id": "chinese_translator_cape",
+    "name": "Chinese Translator Cape",
+    "category": "Volunteer",
+    "description": "Official Volunteer cape: Chinese Translator Cape",
+    "texture": "zerocapes:textures/capes/chinese_translator_cape.png"
+  },
+  {
+    "id": "moderator_cape",
+    "name": "Moderator Cape",
+    "category": "Volunteer",
+    "description": "Official Volunteer cape: Moderator Cape",
+    "texture": "zerocapes:textures/capes/moderator_cape.png"
+  },
+  {
+    "id": "realms_mapmaker_cape",
+    "name": "Realms MapMaker Cape",
+    "category": "Volunteer",
+    "description": "Official Volunteer cape: Realms MapMaker Cape",
+    "texture": "zerocapes:textures/capes/realms_mapmaker_cape.png"
+  },
+  {
+    "id": "christmas_2010_cape",
+    "name": "Christmas 2010 Cape",
+    "category": "Temporary",
+    "description": "Official Temporary cape: Christmas 2010 Cape",
+    "texture": "zerocapes:textures/capes/christmas_2010_cape.png"
+  },
+  {
+    "id": "new_year_2011_cape",
+    "name": "New Year 2011 Cape",
+    "category": "Temporary",
+    "description": "Official Temporary cape: New Year 2011 Cape",
+    "texture": "zerocapes:textures/capes/new_year_2011_cape.png"
+  },
+  {
+    "id": "xbox_1st_birthday_cape",
+    "name": "Xbox 1st Birthday Cape",
+    "category": "Temporary",
+    "description": "Official Temporary cape: Xbox 1st Birthday Cape",
+    "texture": "zerocapes:textures/capes/xbox_1st_birthday_cape.png"
+  }
+]

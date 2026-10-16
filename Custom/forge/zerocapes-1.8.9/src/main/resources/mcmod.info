@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "zerocapes",
+    "name": "ZeroCapes",
+    "description": "Client-side mod by toto that gives you the ability to change your cape to any official Minecraft Java cape.",
+    "version": "1.0.0",
+    "mcversion": "1.8.9",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["toto"],
+    "credits": "",
+    "logoFile": "assets/zerocapes/icon.png",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

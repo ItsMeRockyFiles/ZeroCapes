@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "zerocapes",
+	"version": "${version}",
+	"name": "ZeroCapes",
+	"description": "Client-side mod by toto that gives you the ability to change your cape to any official Minecraft Java cape.",
+	"authors": [
+		"toto"
+	],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/zerocapes/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.toto.zerocapes.client.ZeroCapesClient"
+		]
+	},
+	"mixins": [
+		{
+			"config": "zerocapes.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
