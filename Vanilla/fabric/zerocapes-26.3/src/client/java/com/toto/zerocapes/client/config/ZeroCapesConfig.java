@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.toto.zerocapes.client.cape.CapeDefinition;
 import com.toto.zerocapes.client.cape.CapeRegistry;
-import com.toto.zerocapes.client.cape.CustomCapeManager;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -25,8 +24,6 @@ public class ZeroCapesConfig {
     private static ZeroCapesConfig INSTANCE;
 
     private String selectedCapeId = "none";
-    /** Absolute path to the user-uploaded custom cape PNG, or empty string / null if none. */
-    private String customCapePath = "";
 
     public static ZeroCapesConfig getInstance() {
         if (INSTANCE == null) {
@@ -47,25 +44,8 @@ public class ZeroCapesConfig {
             if (json.has("selectedCapeId")) {
                 this.selectedCapeId = json.get("selectedCapeId").getAsString();
             }
-            if (json.has("customCapePath")) {
-                this.customCapePath = json.get("customCapePath").getAsString();
-            }
         } catch (Exception e) {
             LOGGER.error("[ZeroCapes] Failed to read configuration from {}", CONFIG_PATH, e);
-        }
-
-        // Restore the custom cape texture if it was previously set
-        if (this.customCapePath != null && !this.customCapePath.isBlank()) {
-            Identifier loaded = CustomCapeManager.loadFromFile(this.customCapePath);
-            if (loaded == null) {
-                // File is gone – clear the path so we don't keep retrying
-                LOGGER.warn("[ZeroCapes] Custom cape file no longer found: {}", this.customCapePath);
-                this.customCapePath = "";
-                if ("custom_cape".equalsIgnoreCase(this.selectedCapeId)) {
-                    this.selectedCapeId = "none";
-                }
-                save();
-            }
         }
     }
 
@@ -75,7 +55,6 @@ public class ZeroCapesConfig {
             try (Writer writer = Files.newBufferedWriter(CONFIG_PATH)) {
                 JsonObject json = new JsonObject();
                 json.addProperty("selectedCapeId", this.selectedCapeId != null ? this.selectedCapeId : "none");
-                json.addProperty("customCapePath", this.customCapePath != null ? this.customCapePath : "");
                 GSON.toJson(json, writer);
             }
         } catch (Exception e) {
@@ -92,33 +71,10 @@ public class ZeroCapesConfig {
         save();
     }
 
-    public String getCustomCapePath() {
-        return this.customCapePath != null ? this.customCapePath : "";
-    }
-
-    /**
-     * Updates the stored path for the user-uploaded custom cape.
-     * Also flips the selected cape to "custom_cape" automatically.
-     */
-    public void setCustomCapePath(String path) {
-        this.customCapePath = (path != null) ? path : "";
-        if (!this.customCapePath.isBlank()) {
-            this.selectedCapeId = "custom_cape";
-        }
-        save();
-    }
-
     @Nullable
     public Identifier getCurrentCapeTexture() {
         if ("none".equalsIgnoreCase(this.selectedCapeId)) {
             return null;
-        }
-
-        // Custom cape: return the dynamic texture if it is loaded
-        if ("custom_cape".equalsIgnoreCase(this.selectedCapeId)) {
-            return CustomCapeManager.isLoaded()
-                    ? CustomCapeManager.CUSTOM_CAPE_TEXTURE_ID
-                    : null;
         }
 
         CapeDefinition def = CapeRegistry.getById(this.selectedCapeId);

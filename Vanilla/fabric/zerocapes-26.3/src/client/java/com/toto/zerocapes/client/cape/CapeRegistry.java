@@ -35,16 +35,6 @@ public class CapeRegistry {
         );
         register(DEFAULT_CAPE);
 
-        // Special custom-cape slot (user-uploaded PNG)
-        CapeDefinition customCape = new CapeDefinition(
-            "custom_cape",
-            "Custom Cape",
-            "Custom",
-            "Upload any PNG image and wear it as your cape!",
-            CustomCapeManager.CUSTOM_CAPE_TEXTURE_ID
-        );
-        register(customCape);
-
         try (InputStream is = CapeRegistry.class.getResourceAsStream("/assets/zerocapes/capes_catalog.json")) {
             if (is == null) {
                 LOGGER.warn("[ZeroCapes] Could not locate /assets/zerocapes/capes_catalog.json in classpath!");
