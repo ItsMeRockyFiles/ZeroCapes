@@ -72,9 +72,14 @@ public class ZeroCapesScreen extends Screen {
         this.listWidget.updateSizeAndPosition(listWidth, listHeight, listLeft, listTop);
         this.addRenderableWidget(this.listWidget);
 
-        // Bottom Action Buttons
+        // Bottom Action Buttons - match Forge 1.8.9 layout
+        // Three 100-wide buttons in one centered row, 8 px spacing, 20 px tall
         int buttonWidth = 100;
-        int buttonY = this.height - 32;
+        int buttonSpacing = 8;
+        int buttonHeight = 20;
+        int buttonY = this.height - 30;
+        int totalBtnW = buttonWidth * 3 + buttonSpacing * 2;
+        int startBtnX = (this.width - totalBtnW) / 2;
 
         this.equipButton = this.addRenderableWidget(
                 Button.builder(Component.translatable("zerocapes.screen.equip"), button -> {
@@ -82,7 +87,7 @@ public class ZeroCapesScreen extends Screen {
                                 equipSelectedCape(this.selectedCape);
                             }
                         })
-                        .bounds(this.width / 2 - 220, buttonY, buttonWidth, 20)
+                        .bounds(startBtnX, buttonY, buttonWidth, buttonHeight)
                         .build()
         );
 
@@ -100,13 +105,13 @@ public class ZeroCapesScreen extends Screen {
                                 }
                             }
                         })
-                        .bounds(this.width / 2 + 10, buttonY, buttonWidth, 20)
+                        .bounds(startBtnX + buttonWidth + buttonSpacing, buttonY, buttonWidth, buttonHeight)
                         .build()
         );
 
         this.addRenderableWidget(
                 Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
-                        .bounds(this.width / 2 + 115, buttonY, buttonWidth, 20)
+                        .bounds(startBtnX + (buttonWidth + buttonSpacing) * 2, buttonY, buttonWidth, buttonHeight)
                         .build()
         );
 
@@ -292,7 +297,6 @@ public class ZeroCapesScreen extends Screen {
             int centerY = capeRenderBoxY + capeBoxHeight / 2;
 
             if (this.selectedCape.isDefault() || this.selectedCape.texture() == null) {
-                // Vanilla cape placeholder graphic
                 guiGraphics.centeredText(
                         this.font,
                         Component.literal("§e[ Vanilla / Normal Cape ]"),
@@ -434,7 +438,6 @@ public class ZeroCapesScreen extends Screen {
                     || this.isValidClickButton(event.buttonInfo());
 
             if (isLeftClick) {
-                // Find entry under cursor (check precise position or screen Y range)
                 CapeEntry target = this.getEntryAtPosition(event.x(), event.y());
                 if (target == null) {
                     for (CapeEntry entry : this.children()) {
