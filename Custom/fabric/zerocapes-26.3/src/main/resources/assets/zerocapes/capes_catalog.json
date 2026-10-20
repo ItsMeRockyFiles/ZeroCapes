@@ -390,5 +390,12 @@
     "category": "Temporary",
     "description": "Official Temporary cape: Xbox 1st Birthday Cape",
     "texture": "zerocapes:textures/capes/xbox_1st_birthday_cape.png"
+  },
+  {
+    "id": "Template_cape",
+    "name": "Template Cape",
+    "category": "development",
+    "description": "Official development cape: Template Cape",
+    "texture": "zerocapes:textures/capes/template_cape.png"
   }
 ]

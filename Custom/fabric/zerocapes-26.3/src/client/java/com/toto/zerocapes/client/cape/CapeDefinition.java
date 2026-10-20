@@ -14,7 +14,6 @@ public record CapeDefinition(
         return "none".equalsIgnoreCase(this.id) || this.texture == null;
     }
 
-    /** Returns true if this is the special user-uploaded custom cape slot. */
     public boolean isCustom() {
         return "custom_cape".equalsIgnoreCase(this.id);
     }

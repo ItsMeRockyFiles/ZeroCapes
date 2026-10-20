@@ -16,8 +16,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
 
@@ -28,6 +26,8 @@ public class ZeroCapesScreen extends Screen {
     private Button equipButton;
     private Button selectNoneButton;
     private Button uploadCapeButton;
+    private Button clearCustomButton;
+    private Button doneButton;
     private CapeDefinition selectedCape;
     private String currentCategoryFilter = "All";
     private String currentSearchQuery = "";
@@ -46,17 +46,16 @@ public class ZeroCapesScreen extends Screen {
         int listTop = 64;
         int listHeight = this.height - listTop - 46;
 
-        // Initialize cape selection to current config
         this.selectedCape = ZeroCapesConfig.getInstance().getCurrentCapeDefinition();
 
-        // Search Box
+        // Search box
         this.searchBox = new EditBox(
-            this.font,
-            listLeft,
-            38,
-            listWidth,
-            20,
-            Component.translatable("zerocapes.screen.search")
+                this.font,
+                listLeft,
+                38,
+                listWidth,
+                20,
+                Component.translatable("zerocapes.screen.search")
         );
         this.searchBox.setHint(Component.translatable("zerocapes.screen.search"));
         this.searchBox.setResponder(query -> {
@@ -65,67 +64,151 @@ public class ZeroCapesScreen extends Screen {
         });
         this.addRenderableWidget(this.searchBox);
 
-        // Cape List
+        // Cape list
         this.listWidget = new CapeListWidget(
-            this.minecraft,
-            listWidth,
-            listHeight,
-            listTop,
-            36
+                this.minecraft,
+                listWidth,
+                listHeight,
+                listTop,
+                36
         );
         this.listWidget.updateSizeAndPosition(listWidth, listHeight, listLeft, listTop);
         this.addRenderableWidget(this.listWidget);
 
-        // Bottom Action Buttons
-        int buttonWidth = 100;
-        int buttonY = this.height - 32;
-
+        // All buttons start at 0,0; layout is computed in updateButtonLayout()
         this.equipButton = this.addRenderableWidget(
-            Button.builder(Component.translatable("zerocapes.screen.equip"), button -> {
-                if (this.selectedCape != null) {
-                    equipSelectedCape(this.selectedCape);
-                }
-            })
-            .bounds(this.width / 2 - 220, buttonY, buttonWidth, 20)
-            .build()
-        );
-
-        this.uploadCapeButton = this.addRenderableWidget(
-            Button.builder(Component.translatable("zerocapes.screen.upload"), button -> {
-                onUploadCustomCape();
-            })
-            .bounds(this.width / 2 - 115, buttonY, buttonWidth + 20, 20)
-            .build()
+                Button.builder(Component.translatable("zerocapes.screen.equip"), button -> {
+                            if (this.selectedCape != null) {
+                                equipSelectedCape(this.selectedCape);
+                            }
+                        })
+                        .bounds(0, 0, 100, 20)
+                        .build()
         );
 
         this.selectNoneButton = this.addRenderableWidget(
-            Button.builder(Component.translatable("zerocapes.screen.none"), button -> {
-                CustomCapeManager.unload();
-                ZeroCapesConfig.getInstance().setCustomCapePath("");
-                CapeDefinition def = CapeRegistry.getDefaultCape();
-                this.selectedCape = def;
-                equipSelectedCape(def);
-                if (this.listWidget != null) {
-                    for (CapeListWidget.CapeEntry entry : this.listWidget.children()) {
-                        if (entry.getCape().isDefault()) {
-                            this.listWidget.setSelected(entry);
-                            break;
-                        }
-                    }
-                }
-            })
-            .bounds(this.width / 2 + 10, buttonY, buttonWidth, 20)
-            .build()
+                Button.builder(Component.translatable("zerocapes.screen.none"), button -> {
+                            // Only switches the equipped cape to vanilla.
+                            // Does NOT touch the uploaded PNG.
+                            CapeDefinition def = CapeRegistry.getDefaultCape();
+                            this.selectedCape = def;
+                            equipSelectedCape(def);
+                            if (this.listWidget != null) {
+                                for (CapeListWidget.CapeEntry entry : this.listWidget.children()) {
+                                    if (entry.getCape().isDefault()) {
+                                        this.listWidget.setSelected(entry);
+                                        break;
+                                    }
+                                }
+                            }
+                            updateButtonLayout();
+                        })
+                        .bounds(0, 0, 100, 20)
+                        .build()
         );
 
-        this.addRenderableWidget(
-            Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
-            .bounds(this.width / 2 + 115, buttonY, buttonWidth, 20)
-            .build()
+        this.uploadCapeButton = this.addRenderableWidget(
+                Button.builder(Component.translatable("zerocapes.screen.upload"), button -> {
+                            onUploadCustomCape();
+                        })
+                        .bounds(0, 0, 110, 20)
+                        .build()
+        );
+
+        this.clearCustomButton = this.addRenderableWidget(
+                Button.builder(Component.translatable("zerocapes.screen.clear_custom"), button -> {
+                            CustomCapeManager.unload();
+                            ZeroCapesConfig.getInstance().clearCustomCape();
+                            CapeDefinition def = CapeRegistry.getDefaultCape();
+                            this.selectedCape = def;
+                            equipSelectedCape(def);
+                            if (this.listWidget != null) {
+                                for (CapeListWidget.CapeEntry entry : this.listWidget.children()) {
+                                    if (entry.getCape().isDefault()) {
+                                        this.listWidget.setSelected(entry);
+                                        break;
+                                    }
+                                }
+                            }
+                            updateButtonLayout();
+                        })
+                        .bounds(0, 0, 110, 20)
+                        .build()
+        );
+
+        this.doneButton = this.addRenderableWidget(
+                Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
+                        .bounds(0, 0, 100, 20)
+                        .build()
         );
 
         refreshCapeList();
         updateButtons();
+        updateButtonLayout();
+    }
+
+    private void updateButtonLayout() {
+        boolean isCustom = this.selectedCape != null && this.selectedCape.isCustom();
+
+        // Show only when the custom cape entry is selected
+        this.uploadCapeButton.visible = isCustom;
+        this.clearCustomButton.visible = isCustom;
+
+        // Recompute availability (equip gating happens in updateButtons())
+        if (isCustom) {
+            this.uploadCapeButton.active = true;
+            // "Reset Custom" is only useful if something is actually uploaded
+            this.clearCustomButton.active = CustomCapeManager.isLoaded()
+                    || !ZeroCapesConfig.getInstance().getCustomCapePath().isBlank();
+        }
+
+        int buttonHeight = 20;
+        int buttonY = this.height - 32;
+        int spacing = 5;
+
+        // Build the list of visible buttons in order
+        Button[] row;
+        int[] widths;
+
+        if (isCustom) {
+            row = new Button[]{
+                    this.equipButton,
+                    this.selectNoneButton,
+                    this.uploadCapeButton,
+                    this.clearCustomButton,
+                    this.doneButton
+            };
+            widths = new int[]{100, 110, 110, 110, 100};
+        } else {
+            row = new Button[]{
+                    this.equipButton,
+                    this.selectNoneButton,
+                    this.doneButton
+            };
+            widths = new int[]{100, 110, 100};
+        }
+
+        int totalWidth = 0;
+        for (int i = 0; i < widths.length; i++) {
+            totalWidth += widths[i];
+            if (i < widths.length - 1) totalWidth += spacing;
+        }
+
+        int x = (this.width - totalWidth) / 2;
+        for (int i = 0; i < row.length; i++) {
+            row[i].setPosition(x, buttonY);
+            row[i].setWidth(widths[i]);
+            x += widths[i] + spacing;
+        }
+
+        // Keep the list top area clean even if resized
+        int listWidth = Math.min(240, this.width / 2 - 10);
+        int listLeft = 20;
+        int listTop = 64;
+        int listHeight = this.height - listTop - 46;
+        if (this.listWidget != null) {
+            this.listWidget.updateSizeAndPosition(listWidth, listHeight, listLeft, listTop);
+        }
     }
 
     private void refreshCapeList() {
@@ -136,14 +219,12 @@ public class ZeroCapesScreen extends Screen {
         List<CapeDefinition> all = CapeRegistry.getAllCapes();
 
         for (CapeDefinition cape : all) {
-            // Category filter check
             if (!"All".equalsIgnoreCase(this.currentCategoryFilter)) {
                 if (!cape.category().equalsIgnoreCase(this.currentCategoryFilter)) {
                     continue;
                 }
             }
 
-            // Search query check
             if (!query.isEmpty()) {
                 boolean matchName = cape.name().toLowerCase(Locale.ROOT).contains(query);
                 boolean matchCategory = cape.category().toLowerCase(Locale.ROOT).contains(query);
@@ -169,20 +250,19 @@ public class ZeroCapesScreen extends Screen {
     public void selectCape(CapeDefinition cape) {
         this.selectedCape = cape;
         updateButtons();
+        updateButtonLayout();
     }
 
     public void equipSelectedCape(CapeDefinition cape) {
+        // Safety: refuse to equip a custom cape if no PNG is uploaded
+        if (cape != null && cape.isCustom() && !CustomCapeManager.isLoaded()) {
+            return;
+        }
         ZeroCapesConfig.getInstance().setSelectedCapeId(cape.id());
         updateButtons();
     }
 
-    /**
-     * Opens a native file picker, loads the chosen PNG as a custom cape,
-     * and equips it. Runs the file dialog on a background thread to avoid
-     * freezing the game, then schedules the texture upload on the main thread.
-     */
     private void onUploadCustomCape() {
-        // Disable button while dialog is open
         if (this.uploadCapeButton != null) {
             this.uploadCapeButton.active = false;
         }
@@ -190,21 +270,19 @@ public class ZeroCapesScreen extends Screen {
         Thread thread = new Thread(() -> {
             String path = CustomCapeManager.openFilePicker();
 
-            // Re-enable and process on the main (render) thread
             Minecraft mc = Minecraft.getInstance();
             mc.execute(() -> {
-                if (this.uploadCapeButton != null) {
-                    this.uploadCapeButton.active = true;
-                }
                 if (path == null || path.isBlank()) {
-                    return; // user cancelled
+                    // Cancelled - restore button state
+                    updateButtonLayout();
+                    updateButtons();
+                    return;
                 }
 
                 Identifier tex = CustomCapeManager.loadFromFile(path);
                 if (tex != null) {
                     ZeroCapesConfig.getInstance().setCustomCapePath(path);
 
-                    // Select & equip the custom cape entry in the list
                     CapeDefinition customDef = CapeRegistry.getById("custom_cape");
                     this.selectedCape = customDef;
                     if (this.listWidget != null) {
@@ -215,8 +293,10 @@ public class ZeroCapesScreen extends Screen {
                             }
                         }
                     }
-                    updateButtons();
                 }
+
+                updateButtons();
+                updateButtonLayout();
             });
         }, "ZeroCapes-FilePicker");
         thread.setDaemon(true);
@@ -225,10 +305,18 @@ public class ZeroCapesScreen extends Screen {
 
     private void updateButtons() {
         String equippedId = ZeroCapesConfig.getInstance().getSelectedCapeId();
+
         if (this.selectedCape != null) {
             boolean isAlreadyEquipped = this.selectedCape.id().equalsIgnoreCase(equippedId);
-            this.equipButton.active = !isAlreadyEquipped;
-            if (isAlreadyEquipped) {
+
+            // Gate: custom cape can only be equipped if a PNG is actually loaded
+            boolean customBlocked = this.selectedCape.isCustom() && !CustomCapeManager.isLoaded();
+
+            this.equipButton.active = !isAlreadyEquipped && !customBlocked;
+
+            if (customBlocked) {
+                this.equipButton.setMessage(Component.translatable("zerocapes.screen.upload_first"));
+            } else if (isAlreadyEquipped) {
                 this.equipButton.setMessage(Component.translatable("zerocapes.screen.equipped"));
             } else {
                 this.equipButton.setMessage(Component.translatable("zerocapes.screen.equip"));
@@ -245,17 +333,15 @@ public class ZeroCapesScreen extends Screen {
         this.extractTransparentBackground(guiGraphics);
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
-        // Header Titles (with full alpha 0xFF)
         guiGraphics.centeredText(this.font, this.title, this.width / 2, 12, 0xFFFFFFFF);
         guiGraphics.centeredText(
-            this.font,
-            Component.literal("§7Choose from all official Minecraft Java capes or keep your vanilla cape."),
-            this.width / 2,
-            25,
-            0xFFAAAAAA
+                this.font,
+                Component.literal("§7Choose from all official Minecraft Java capes or keep your vanilla cape."),
+                this.width / 2,
+                25,
+                0xFFAAAAAA
         );
 
-        // Right Preview Area
         renderPreviewPanel(guiGraphics, mouseX, mouseY);
     }
 
@@ -275,76 +361,70 @@ public class ZeroCapesScreen extends Screen {
 
         if (previewWidth < 120 || previewHeight < 100) return;
 
-        // Background Box
         guiGraphics.fill(previewX, previewY, previewX + previewWidth, previewY + previewHeight, 0xB0000000);
         drawOutline(guiGraphics, previewX, previewY, previewWidth, previewHeight, 0xFF555555);
 
         if (this.selectedCape == null) {
             guiGraphics.centeredText(
-                this.font,
-                Component.literal("Select a cape from the list to preview"),
-                previewX + previewWidth / 2,
-                previewY + previewHeight / 2 - 4,
-                0xFF888888
+                    this.font,
+                    Component.literal("Select a cape from the list to preview"),
+                    previewX + previewWidth / 2,
+                    previewY + previewHeight / 2 - 4,
+                    0xFF888888
             );
             return;
         }
 
-        // Cape Name Title
         int textY = previewY + 12;
         guiGraphics.text(
-            this.font,
-            Component.literal("§l" + this.selectedCape.name()),
-            previewX + 16,
-            textY,
-            0xFFFFFFFF
+                this.font,
+                Component.literal("§l" + this.selectedCape.name()),
+                previewX + 16,
+                textY,
+                0xFFFFFFFF
         );
         textY += 14;
 
-        // Category Badge
         int catColor = getCategoryColor(this.selectedCape.category());
         guiGraphics.text(
-            this.font,
-            Component.literal("§7Category: §r" + this.selectedCape.category()),
-            previewX + 16,
-            textY,
-            catColor
+                this.font,
+                Component.literal("§7Category: §r" + this.selectedCape.category()),
+                previewX + 16,
+                textY,
+                catColor
         );
         textY += 14;
 
-        // Equipped Status
         String currentEquipped = ZeroCapesConfig.getInstance().getSelectedCapeId();
         boolean isEquipped = this.selectedCape.id().equalsIgnoreCase(currentEquipped);
         if (isEquipped) {
             guiGraphics.text(
-                this.font,
-                Component.literal("§a✔ Currently Equipped"),
-                previewX + 16,
-                textY,
-                0xFF55FF55
+                    this.font,
+                    Component.literal("§a✔ Currently Equipped"),
+                    previewX + 16,
+                    textY,
+                    0xFF55FF55
             );
         } else {
             guiGraphics.text(
-                this.font,
-                Component.literal("§8Status: Not equipped (Click 'Equip Cape' below)"),
-                previewX + 16,
-                textY,
-                0xFF888888
+                    this.font,
+                    Component.literal("§8Status: Not equipped (Click 'Equip Cape' below)"),
+                    previewX + 16,
+                    textY,
+                    0xFF888888
             );
         }
         textY += 16;
 
-        // Description
         guiGraphics.text(
-            this.font,
-            Component.literal("§7" + this.selectedCape.description()),
-            previewX + 16,
-            textY,
-            0xFFBBBBBB
+                this.font,
+                Component.literal("§7" + this.selectedCape.description()),
+                previewX + 16,
+                textY,
+                0xFFBBBBBB
         );
         textY += 24;
 
-        // Visual Cape Rendering
         int capeRenderBoxY = textY;
         int capeBoxHeight = (previewY + previewHeight) - capeRenderBoxY - 12;
 
@@ -353,43 +433,41 @@ public class ZeroCapesScreen extends Screen {
             int centerY = capeRenderBoxY + capeBoxHeight / 2;
 
             if (this.selectedCape.isDefault() || this.selectedCape.texture() == null) {
-                // Vanilla cape placeholder graphic
                 guiGraphics.centeredText(
-                    this.font,
-                    Component.literal("§e[ Vanilla / Normal Cape ]"),
-                    centerX,
-                    centerY - 10,
-                    0xFFFFFF55
+                        this.font,
+                        Component.literal("§e[ Vanilla / Normal Cape ]"),
+                        centerX,
+                        centerY - 10,
+                        0xFFFFFF55
                 );
                 guiGraphics.centeredText(
-                    this.font,
-                    Component.literal("§7Displays your Minecraft account cape"),
-                    centerX,
-                    centerY + 4,
-                    0xFF888888
+                        this.font,
+                        Component.literal("§7Displays your Minecraft account cape"),
+                        centerX,
+                        centerY + 4,
+                        0xFF888888
                 );
             } else if (this.selectedCape.isCustom() && !CustomCapeManager.isLoaded()) {
-                // Custom cape selected but no image uploaded yet
                 guiGraphics.centeredText(
-                    this.font,
-                    Component.literal("§6[ Custom Cape ]"),
-                    centerX,
-                    centerY - 20,
-                    0xFFFFAA00
+                        this.font,
+                        Component.literal("§6[ Custom Cape ]"),
+                        centerX,
+                        centerY - 20,
+                        0xFFFFAA00
                 );
                 guiGraphics.centeredText(
-                    this.font,
-                    Component.literal("§7No image uploaded yet."),
-                    centerX,
-                    centerY - 6,
-                    0xFF888888
+                        this.font,
+                        Component.literal("§7No image uploaded yet."),
+                        centerX,
+                        centerY - 6,
+                        0xFF888888
                 );
                 guiGraphics.centeredText(
-                    this.font,
-                    Component.literal("§eClick \"Upload PNG\" below to pick a file!"),
-                    centerX,
-                    centerY + 8,
-                    0xFFFFFF55
+                        this.font,
+                        Component.literal("§eClick \"Upload PNG\" below to pick a file!"),
+                        centerX,
+                        centerY + 8,
+                        0xFFFFFF55
                 );
             } else {
                 Identifier tex = this.selectedCape.texture();
@@ -397,7 +475,6 @@ public class ZeroCapesScreen extends Screen {
                 int scaledW = (int) (10 * scale);
                 int scaledH = (int) (16 * scale);
 
-                // Back side of cape (Outer emblem)
                 int backX = centerX - scaledW - 14;
                 int backY = centerY - scaledH / 2;
 
@@ -405,26 +482,25 @@ public class ZeroCapesScreen extends Screen {
                 drawOutline(guiGraphics, backX - 2, backY - 2, scaledW + 4, scaledH + 4, 0xFF666666);
 
                 guiGraphics.blit(
-                    tex,
-                    backX,
-                    backY,
-                    backX + scaledW,
-                    backY + scaledH,
-                    1.0f / 64.0f,
-                    11.0f / 64.0f,
-                    1.0f / 32.0f,
-                    17.0f / 32.0f
+                        tex,
+                        backX,
+                        backY,
+                        backX + scaledW,
+                        backY + scaledH,
+                        1.0f / 64.0f,
+                        11.0f / 64.0f,
+                        1.0f / 32.0f,
+                        17.0f / 32.0f
                 );
 
                 guiGraphics.centeredText(
-                    this.font,
-                    Component.literal("§7Back (Outer)"),
-                    backX + scaledW / 2,
-                    backY + scaledH + 5,
-                    0xFFAAAAAA
+                        this.font,
+                        Component.literal("§7Back (Outer)"),
+                        backX + scaledW / 2,
+                        backY + scaledH + 5,
+                        0xFFAAAAAA
                 );
 
-                // Front side of cape (Inner lining)
                 int frontX = centerX + 14;
                 int frontY = centerY - scaledH / 2;
 
@@ -432,23 +508,23 @@ public class ZeroCapesScreen extends Screen {
                 drawOutline(guiGraphics, frontX - 2, frontY - 2, scaledW + 4, scaledH + 4, 0xFF666666);
 
                 guiGraphics.blit(
-                    tex,
-                    frontX,
-                    frontY,
-                    frontX + scaledW,
-                    frontY + scaledH,
-                    12.0f / 64.0f,
-                    22.0f / 64.0f,
-                    1.0f / 32.0f,
-                    17.0f / 32.0f
+                        tex,
+                        frontX,
+                        frontY,
+                        frontX + scaledW,
+                        frontY + scaledH,
+                        12.0f / 64.0f,
+                        22.0f / 64.0f,
+                        1.0f / 32.0f,
+                        17.0f / 32.0f
                 );
 
                 guiGraphics.centeredText(
-                    this.font,
-                    Component.literal("§7Front (Inner)"),
-                    frontX + scaledW / 2,
-                    frontY + scaledH + 5,
-                    0xFFAAAAAA
+                        this.font,
+                        Component.literal("§7Front (Inner)"),
+                        frontX + scaledW / 2,
+                        frontY + scaledH + 5,
+                        0xFFAAAAAA
                 );
             }
         }
@@ -510,16 +586,14 @@ public class ZeroCapesScreen extends Screen {
                 return false;
             }
 
-            // Scrollbar dragging check
             if (this.updateScrolling(event)) {
                 return true;
             }
 
             boolean isLeftClick = event.button() == 0 || event.button() == 1
-                || this.isValidClickButton(event.buttonInfo());
+                    || this.isValidClickButton(event.buttonInfo());
 
             if (isLeftClick) {
-                // Find entry under cursor (check precise position or screen Y range)
                 CapeEntry target = this.getEntryAtPosition(event.x(), event.y());
                 if (target == null) {
                     for (CapeEntry entry : this.children()) {
@@ -566,11 +640,11 @@ public class ZeroCapesScreen extends Screen {
 
             @Override
             public void extractContent(
-                GuiGraphicsExtractor guiGraphics,
-                int mouseX,
-                int mouseY,
-                boolean hovering,
-                float partialTick
+                    GuiGraphicsExtractor guiGraphics,
+                    int mouseX,
+                    int mouseY,
+                    boolean hovering,
+                    float partialTick
             ) {
                 int left = this.getX();
                 int top = this.getY();
@@ -578,10 +652,9 @@ public class ZeroCapesScreen extends Screen {
                 int height = this.getHeight();
 
                 boolean isSelected = (ZeroCapesScreen.this.selectedCape != null
-                    && ZeroCapesScreen.this.selectedCape.id().equalsIgnoreCase(this.cape.id()));
+                        && ZeroCapesScreen.this.selectedCape.id().equalsIgnoreCase(this.cape.id()));
                 boolean isEquipped = this.cape.id().equalsIgnoreCase(ZeroCapesConfig.getInstance().getSelectedCapeId());
 
-                // Item highlight / border
                 if (isSelected) {
                     guiGraphics.fill(left, top, left + width, top + height, 0x40FFFFFF);
                     drawOutline(guiGraphics, left, top, width, height, 0xFFFFFFFF);
@@ -589,7 +662,6 @@ public class ZeroCapesScreen extends Screen {
                     guiGraphics.fill(left, top, left + width, top + height, 0x20FFFFFF);
                 }
 
-                // Cape Icon / Mini Preview
                 int iconX = left + 6;
                 int iconY = top + 5;
                 int iconW = 16;
@@ -599,59 +671,57 @@ public class ZeroCapesScreen extends Screen {
 
                 if (this.cape.isDefault() || this.cape.texture() == null) {
                     guiGraphics.centeredText(
-                        ZeroCapesScreen.this.font,
-                        Component.literal("§7✕"),
-                        iconX + iconW / 2,
-                        iconY + iconH / 2 - 4,
-                        0xFF888888
+                            ZeroCapesScreen.this.font,
+                            Component.literal("§7✕"),
+                            iconX + iconW / 2,
+                            iconY + iconH / 2 - 4,
+                            0xFF888888
                     );
                 } else {
                     Identifier tex = this.cape.texture();
                     guiGraphics.blit(
-                        tex,
-                        iconX,
-                        iconY,
-                        iconX + iconW,
-                        iconY + iconH,
-                        1.0f / 64.0f,
-                        11.0f / 64.0f,
-                        1.0f / 32.0f,
-                        17.0f / 32.0f
+                            tex,
+                            iconX,
+                            iconY,
+                            iconX + iconW,
+                            iconY + iconH,
+                            1.0f / 64.0f,
+                            11.0f / 64.0f,
+                            1.0f / 32.0f,
+                            17.0f / 32.0f
                     );
                 }
 
-                // Title & Category
                 int textX = iconX + iconW + 8;
                 String namePrefix = isEquipped ? "§a" : (isSelected ? "§f" : "§7");
                 guiGraphics.text(
-                    ZeroCapesScreen.this.font,
-                    Component.literal(namePrefix + this.cape.name()),
-                    textX,
-                    top + 6,
-                    0xFFFFFFFF
+                        ZeroCapesScreen.this.font,
+                        Component.literal(namePrefix + this.cape.name()),
+                        textX,
+                        top + 6,
+                        0xFFFFFFFF
                 );
 
                 int catCol = getCategoryColor(this.cape.category());
                 guiGraphics.text(
-                    ZeroCapesScreen.this.font,
-                    Component.literal("§8[" + this.cape.category() + "]"),
-                    textX,
-                    top + 18,
-                    catCol
+                        ZeroCapesScreen.this.font,
+                        Component.literal("§8[" + this.cape.category() + "]"),
+                        textX,
+                        top + 18,
+                        catCol
                 );
 
-                // EQUIPPED Badge
                 if (isEquipped) {
                     int badgeW = 32;
                     int badgeX = left + width - badgeW - 6;
                     guiGraphics.fill(badgeX, top + 9, badgeX + badgeW, top + 21, 0xDD115511);
                     drawOutline(guiGraphics, badgeX, top + 9, badgeW, 12, 0xFF44FF44);
                     guiGraphics.centeredText(
-                        ZeroCapesScreen.this.font,
-                        Component.literal("§aEQ"),
-                        badgeX + badgeW / 2,
-                        top + 11,
-                        0xFF55FF55
+                            ZeroCapesScreen.this.font,
+                            Component.literal("§aEQ"),
+                            badgeX + badgeW / 2,
+                            top + 11,
+                            0xFF55FF55
                     );
                 }
             }
@@ -659,7 +729,7 @@ public class ZeroCapesScreen extends Screen {
             @Override
             public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
                 boolean isLeftClick = event.button() == 0 || event.button() == 1
-                    || CapeListWidget.this.isValidClickButton(event.buttonInfo());
+                        || CapeListWidget.this.isValidClickButton(event.buttonInfo());
                 if (isLeftClick) {
                     ZeroCapesScreen.this.selectCape(this.cape);
                     ZeroCapesScreen.this.listWidget.setSelected(this);
